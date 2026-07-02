@@ -29,6 +29,33 @@ configuration, and run dry-run demos. Treat live issuance as a high-impact actio
 5. Report CAE, CAE expiration, voucher number, observations, and errors without storing
    sensitive response data in the repository.
 
+## Live Issuance
+
+Use `scripts/afip_wsfe_demo.py --live` only after a dry-run review. A live request:
+
+1. Signs a WSAA login ticket with the user's private certificate and key.
+2. Calls WSAA `loginCms`.
+3. Calls WSFEv1 `FECompUltimoAutorizado`.
+4. Calls WSFEv1 `FECAESolicitar`.
+
+Require all of these before live mode:
+
+- explicit user request to issue
+- `--live`
+- `confirm_live: true`
+- private config outside the repository
+- valid `issuer.certificate_path` and `issuer.private_key_path`
+- reviewed amount, dates, receiver CUIT, voucher type, and point of sale
+
+Command pattern:
+
+```bash
+python3 scripts/afip_wsfe_demo.py \
+  --config path/to/config.private.json \
+  --request path/to/invoice_request.private.json \
+  --live
+```
+
 ## Bundled Resources
 
 - `scripts/afip_wsfe_demo.py`: CLI for dry-run payload generation and explicit live calls.
@@ -46,4 +73,3 @@ python -m compileall src scripts tests
 python -m unittest discover -s tests
 python scripts/audit_secrets.py .
 ```
-

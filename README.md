@@ -96,11 +96,18 @@ For branches or forks, keep these invariants:
 
 ## Live mode
 
-Live mode requires optional SOAP dependencies, OpenSSL, and local certificates:
+Live mode is the path that can issue a real voucher. It performs these calls:
+
+1. Build and sign a WSAA `loginTicketRequest`.
+2. Call WSAA `loginCms` to obtain `token` and `sign`.
+3. Call WSFEv1 `FECompUltimoAutorizado` to calculate the next voucher number.
+4. Call WSFEv1 `FECAESolicitar` to request authorization and CAE.
+
+Live mode requires optional SOAP dependencies, OpenSSL, AFIP/ARCA web service
+authorization, a configured electronic point of sale, and local certificates:
 
 ```bash
 python3 -m pip install ".[soap]"
-python3 scripts/afip_wsfe_demo.py --config path/to/config.json --request path/to/request.json --live
 ```
 
 Your config must set:
@@ -112,6 +119,52 @@ Your config must set:
 - `issuer.private_key_path`
 
 Do not commit live config. Use `config.json` or `*.private.json`; both are ignored.
+
+Minimal private config shape:
+
+```json
+{
+  "environment": "homologation",
+  "confirm_live": true,
+  "issuer": {
+    "display_name": "Your Private Issuer Name",
+    "cuit": "20111111112",
+    "point_of_sale": 1,
+    "iva_condition": 1,
+    "certificate_path": "/absolute/private/path/certificate.crt",
+    "private_key_path": "/absolute/private/path/private.key"
+  }
+}
+```
+
+Recommended sequence before issuing:
+
+```bash
+# 1. Dry-run and inspect the payload.
+python3 scripts/afip_wsfe_demo.py \
+  --config path/to/config.private.json \
+  --request path/to/invoice_request.private.json
+
+# 2. Run the audit.
+python3 scripts/audit_secrets.py .
+
+# 3. Issue only after the payload, amounts, dates, receiver, point of sale, and
+#    voucher type have been reviewed.
+python3 scripts/afip_wsfe_demo.py \
+  --config path/to/config.private.json \
+  --request path/to/invoice_request.private.json \
+  --live
+```
+
+If AFIP/ARCA WSDL retrieval is unreliable from your network, pass a local WSDL:
+
+```bash
+python3 scripts/afip_wsfe_demo.py \
+  --config path/to/config.private.json \
+  --request path/to/invoice_request.private.json \
+  --live \
+  --wsdl path/to/wsfev1.wsdl
+```
 
 Production use should be reviewed by a qualified professional. AFIP/ARCA rules and
 catalogs can change.
