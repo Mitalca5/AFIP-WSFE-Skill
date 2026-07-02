@@ -22,4 +22,4 @@ config.json
 ta-*.xml
 ta-*.json
 cae-*.json
-
+.audit-secrets.local.txt

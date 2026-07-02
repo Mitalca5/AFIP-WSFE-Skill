@@ -24,6 +24,14 @@ class AuditSecretsTest(unittest.TestCase):
             findings = audit_secrets.audit(root)
             self.assertTrue(any("unexpected CUIT-like" in finding for finding in findings))
 
+    def test_uses_local_denylist_without_shipping_private_terms(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".audit-secrets.local.txt").write_text("Forbidden Example Name\n", encoding="utf-8")
+            (root / "bad.txt").write_text("Forbidden Example Name", encoding="utf-8")
+            findings = audit_secrets.audit(root)
+            self.assertTrue(any(".audit-secrets.local.txt:1" in finding for finding in findings))
+
 
 if __name__ == "__main__":
     unittest.main()

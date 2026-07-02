@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from pathlib import Path
@@ -14,17 +15,15 @@ SKIP_SUFFIXES = {".pyc", ".pyo", ".png", ".jpg", ".jpeg", ".gif", ".pdf", ".zip"
 
 BEGIN = "-----" + "BEGIN"
 PRIVATE_KEY = "PRIVATE " + "KEY"
-PRIVATE_NAMES = "santa_" + "julia|la_" + "victorica|romina|verdini|santos"
-PRIVATE_PATHS = r"\.open" + r"claw|legal/" + r"certificados|certificados/"
 
 PATTERNS = [
     ("private key", re.compile(BEGIN + r" [A-Z ]*" + PRIVATE_KEY + "-----")),
     ("certificate", re.compile(BEGIN + r" CERTIFICATE-----")),
     ("possible CAE", re.compile(r"\b\d{14}\b")),
-    ("private AFIP path", re.compile(PRIVATE_PATHS, re.IGNORECASE)),
-    ("named private readme", re.compile(PRIVATE_NAMES, re.IGNORECASE)),
 ]
 CUIT_RE = re.compile(r"\b(?:20|23|24|27|30|33|34)\d{9}\b")
+LOCAL_DENYLIST = ".audit-secrets.local.txt"
+EXTRA_PATTERNS_ENV = "AUDIT_SECRETS_EXTRA_PATTERNS"
 
 
 def iter_files(root: Path):
@@ -35,20 +34,38 @@ def iter_files(root: Path):
             yield path
 
 
+def load_extra_patterns(root: Path) -> list[tuple[str, re.Pattern[str]]]:
+    patterns: list[tuple[str, re.Pattern[str]]] = []
+    local_file = root / LOCAL_DENYLIST
+    if local_file.exists():
+        for line_number, line in enumerate(local_file.read_text(encoding="utf-8").splitlines(), 1):
+            value = line.strip()
+            if not value or value.startswith("#"):
+                continue
+            patterns.append((f"{LOCAL_DENYLIST}:{line_number}", re.compile(value, re.IGNORECASE)))
+
+    env_value = os.environ.get(EXTRA_PATTERNS_ENV, "")
+    if env_value.strip():
+        patterns.append((EXTRA_PATTERNS_ENV, re.compile(env_value, re.IGNORECASE)))
+
+    return patterns
+
+
 def audit(root: Path) -> list[str]:
     findings: list[str] = []
+    patterns = PATTERNS + load_extra_patterns(root)
     for path in iter_files(root):
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
         rel = path.relative_to(root)
-        if rel == Path("scripts/audit_secrets.py"):
-            continue
         for cuit in CUIT_RE.findall(text):
             if cuit not in ALLOWED_CUITS:
                 findings.append(f"{rel}: unexpected CUIT-like value {cuit}")
-        for label, pattern in PATTERNS:
+        if rel == Path(LOCAL_DENYLIST):
+            continue
+        for label, pattern in patterns:
             if pattern.search(text):
                 findings.append(f"{rel}: matched {label}")
     return findings
