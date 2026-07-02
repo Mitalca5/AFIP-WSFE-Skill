@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+dist/
+build/
+*.egg-info/
+.venv/
+venv/
+
+# Private AFIP/ARCA material
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+config.json
+*.private.json
+ta-*.xml
+ta-*.json
+cae-*.json
+

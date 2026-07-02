@@ -1,0 +1,23 @@
+{
+  "voucher_type": 1,
+  "concept": 2,
+  "voucher_number": 1,
+  "voucher_date": "20260701",
+  "service_from": "20260701",
+  "service_to": "20260731",
+  "payment_due": "20260810",
+  "receiver": {
+    "display_name": "Cliente Ficticio Dos",
+    "cuit": "20222222223"
+  },
+  "receiver_iva_condition": 1,
+  "iva_rate_id": 5,
+  "items": [
+    {
+      "description": "Servicios profesionales ficticios",
+      "quantity": 1,
+      "unit_price": 1000.0
+    }
+  ]
+}
+

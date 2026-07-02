@@ -1,0 +1,13 @@
+{
+  "environment": "homologation",
+  "confirm_live": false,
+  "issuer": {
+    "display_name": "Empresa Ficticia Uno",
+    "cuit": "20111111112",
+    "point_of_sale": 1,
+    "iva_condition": 1,
+    "certificate_path": "/private/path/not-in-repo/certificado.crt",
+    "private_key_path": "/private/path/not-in-repo/clave_privada.pem"
+  }
+}
+
