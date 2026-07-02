@@ -66,6 +66,8 @@ python3 scripts/afip_wsfe_demo.py \
 - `scripts/audit_secrets.py`: repository scanner for private data and secret patterns.
 - `examples/config.example.json`: sanitized issuer configuration.
 - `examples/invoice_request.example.json`: sanitized invoice request.
+- `examples/credit_note_request.example.json`: sanitized credit note request with an
+  associated voucher.
 - `references/afip-codes.md`: common WSFE code tables.
 - `references/certificates.md`: certificate, CSR, WSFE authorization, and point of sale setup.
 

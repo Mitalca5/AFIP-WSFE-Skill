@@ -1,5 +1,10 @@
 # Open AFIP WSFE Skill
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](pyproject.toml)
+[![Dry-run first](https://img.shields.io/badge/default-dry--run-orange.svg)](README.md#safety-defaults)
+[![Secret audit](https://img.shields.io/badge/secret--audit-included-purple.svg)](scripts/audit_secrets.py)
+
 Open AFIP WSFE Skill is a publishable Codex skill plus a small Python helper
 library for Argentine electronic invoicing through AFIP/ARCA WSAA and WSFEv1.
 
@@ -14,7 +19,7 @@ connection, or issuing a real voucher. Live calls require explicit opt-in.
   payloads.
 - A demo CLI that prints a dry-run request by default.
 - A secret audit script intended to catch accidental private data before publishing.
-- Sanitized examples using only fictional CUITs.
+- Sanitized invoice and credit note examples using only fictional CUITs.
 
 ## What This Is Not
 
@@ -60,6 +65,7 @@ AFIP/ARCA.
 ├── SKILL.md
 ├── README.md
 ├── examples/
+│   ├── credit_note_request.example.json
 │   ├── config.example.json
 │   └── invoice_request.example.json
 ├── references/
@@ -85,6 +91,14 @@ Good agent prompt:
 ```text
 Use the open-afip-wsfe skill in this repository to prepare a dry-run Factura A
 payload from examples/invoice_request.example.json. Do not call AFIP/ARCA.
+```
+
+Credit note dry-run example:
+
+```bash
+python3 scripts/afip_wsfe_demo.py \
+  --config examples/config.example.json \
+  --request examples/credit_note_request.example.json
 ```
 
 For branches or forks, keep these invariants:
@@ -218,4 +232,4 @@ python3 scripts/audit_secrets.py .
 
 ## License
 
-MIT. See `pyproject.toml`.
+MIT. See `LICENSE`.

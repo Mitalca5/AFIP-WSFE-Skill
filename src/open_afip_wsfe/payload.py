@@ -104,7 +104,7 @@ def calculate_amounts(request: dict[str, Any]) -> dict[str, Decimal]:
     if exempt:
         return {"net": Decimal("0.00"), "vat": Decimal("0.00"), "exempt": exempt, "total": exempt}
 
-    if voucher_type == 1 or request.get("discriminate_vat"):
+    if voucher_type in {1, 2, 3} or request.get("discriminate_vat"):
         rate = Decimal(str(IVA_RATES[request.get("iva_rate_id", 5)]))
         vat = money(gross_items * rate)
         total = money(gross_items + vat)
@@ -129,4 +129,3 @@ def summarize_payload(payload: dict[str, Any]) -> dict[str, Any]:
         "receiver_doc": detail["DocNro"],
         "dry_run": payload["Auth"]["Token"] == "DRY_RUN_TOKEN",
     }
-

@@ -58,6 +58,8 @@ class PayloadTest(unittest.TestCase):
         assoc = detail["CbtesAsoc"]["CbteAsoc"][0]
         self.assertEqual(assoc["Tipo"], 1)
         self.assertEqual(assoc["Nro"], 6)
+        self.assertEqual(detail["ImpIVA"], 210.0)
+        self.assertEqual(detail["ImpTotal"], 1210.0)
 
 
 if __name__ == "__main__":

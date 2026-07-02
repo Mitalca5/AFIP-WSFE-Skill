@@ -1,0 +1,28 @@
+{
+  "voucher_type": 3,
+  "concept": 2,
+  "voucher_number": 1,
+  "voucher_date": "20260715",
+  "service_from": "20260701",
+  "service_to": "20260731",
+  "payment_due": "20260810",
+  "receiver": {
+    "display_name": "Cliente Ficticio Dos",
+    "cuit": "20222222223"
+  },
+  "receiver_iva_condition": 1,
+  "iva_rate_id": 5,
+  "associated_voucher": {
+    "type": 1,
+    "point_of_sale": 1,
+    "number": 1,
+    "date": "20260701"
+  },
+  "items": [
+    {
+      "description": "Anulacion ficticia de servicios profesionales",
+      "quantity": 1,
+      "unit_price": 1000.0
+    }
+  ]
+}
