@@ -47,6 +47,10 @@ Require all of these before live mode:
 - valid `issuer.certificate_path` and `issuer.private_key_path`
 - reviewed amount, dates, receiver CUIT, voucher type, and point of sale
 
+If the user does not have certificates yet, read `references/certificates.md` and guide
+them through generating a private key and CSR, downloading the AFIP/ARCA certificate,
+authorizing WSFEv1, and configuring an electronic point of sale.
+
 Command pattern:
 
 ```bash
@@ -63,6 +67,7 @@ python3 scripts/afip_wsfe_demo.py \
 - `examples/config.example.json`: sanitized issuer configuration.
 - `examples/invoice_request.example.json`: sanitized invoice request.
 - `references/afip-codes.md`: common WSFE code tables.
+- `references/certificates.md`: certificate, CSR, WSFE authorization, and point of sale setup.
 
 ## Validation Commands
 

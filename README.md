@@ -63,7 +63,8 @@ AFIP/ARCA.
 │   ├── config.example.json
 │   └── invoice_request.example.json
 ├── references/
-│   └── afip-codes.md
+│   ├── afip-codes.md
+│   └── certificates.md
 ├── scripts/
 │   ├── afip_wsfe_demo.py
 │   └── audit_secrets.py
@@ -109,6 +110,12 @@ authorization, a configured electronic point of sale, and local certificates:
 ```bash
 python3 -m pip install ".[soap]"
 ```
+
+If you do not already have a certificate and private key, follow
+`references/certificates.md` first. In short, you need to generate a private key and
+CSR, upload the CSR in AFIP/ARCA's digital certificate service, download the issued
+certificate, authorize the WSFEv1 web service for the taxpayer CUIT, and create or
+verify an electronic point of sale.
 
 Your config must set:
 
